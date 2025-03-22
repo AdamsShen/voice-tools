@@ -13,7 +13,6 @@ yarn-debug.log
 
 # 构建输出
 dist/
-build/
 
 # 日志文件
 logs/

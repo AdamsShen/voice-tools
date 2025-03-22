@@ -7,7 +7,8 @@ const {
   generateSecureKey, 
   parseSecureKey, 
   generateMultipleKeys, 
-  saveKeysToFile 
+  saveKeysToFile,
+  saveKeysToExcel 
 } = require('./key_generator');
 
 // 命令行工具部分
@@ -22,7 +23,8 @@ if (args.includes('-h') || args.includes('--help')) {
   console.log('选项:');
   console.log('  -m, --minutes <分钟>   设置卡密有效期（分钟），默认为43200（30天）');
   console.log('  -c, --count <数量>     生成卡密的数量，默认为1');
-  console.log('  -o, --output <文件>    将生成的卡密保存到指定文件');
+  console.log('  -o, --output <文件>    将生成的卡密保存到JSON文件');
+  console.log('  -e, --excel <文件>     将生成的卡密保存到Excel文件');
   console.log('  -v, --verify <卡密>    验证指定的卡密');
   console.log('  -h, --help             显示帮助信息');
   process.exit(0);
@@ -60,6 +62,12 @@ const outputFile = (() => {
   return index !== -1 && args[index + 1] ? args[index + 1] : null;
 })();
 
+// 添加Excel输出参数解析
+const excelFile = (() => {
+  const index = args.indexOf('-e') !== -1 ? args.indexOf('-e') : args.indexOf('--excel');
+  return index !== -1 && args[index + 1] ? args[index + 1] : null;
+})();
+
 // 生成卡密
 const keys = generateMultipleKeys(count, validMinutes);
 
@@ -73,7 +81,12 @@ keys.forEach((result, index) => {
   console.log('');
 });
 
-// 保存到文件
+// 保存到JSON文件
 if (outputFile) {
   saveKeysToFile(keys, outputFile);
+}
+
+// 保存到Excel文件
+if (excelFile) {
+  saveKeysToExcel(keys, excelFile);
 } 
